@@ -152,13 +152,25 @@ class Townie(User):
 
         return content
 
+    def rename_on_disk(self, old_username):
+        """Assuming that this instance has a new name set, renames this user on
+        disk with self.username."""
+        error = _guarded_run([
+            'sudo',
+            '/tilde/bin/rename_user.py',
+            old_username,
+            self.username])
+        if error:
+            logging.error(error)
+            return
+        logging.info('Renamed {} to {}'.format(old_username, self.username))
+
 
 class Pubkey(Model):
     key_type = CharField(max_length=50,
                          blank=False,
                          null=False,
-                         choices=SSH_TYPE_CHOICES,
-    )
+                         choices=SSH_TYPE_CHOICES)
     key = TextField(blank=False, null=False)
     townie = ForeignKey(Townie)
 
@@ -188,10 +200,15 @@ def on_townie_pre_save(sender, instance, **kwargs):
 
     existing = existing[0]
 
-    if not existing.reviewed and instance.reviewed == True:
+    # See if we need to create this user on disk.
+    if not existing.reviewed and instance.reviewed is True:
         instance.create_on_disk()
         instance.send_welcome_email()
         instance.write_authorized_keys()
+
+    # See if this user needs a rename on disk
+    if existing.username != instance.username:
+        instance.rename_on_disk(existing.username)
 
 
 def _guarded_run(cmd_args, **run_args):
@@ -213,9 +230,6 @@ def _guarded_run(cmd_args, **run_args):
 
 
 # things to consider:
-# * what happens when a user wants their name changed?
-#  * it looks like usermod -l and a mv of the home dir can change a user's username.
-#  * would hook this into the pre_save signal to note a username change
 # * what happens when a user is marked as not reviewed?
 #  * does this signal user deletion? Or does literal Townie deletion signal
 #    "needs to be removed from disk"? I think it makes the most sense for the
@@ -225,7 +239,3 @@ def _guarded_run(cmd_args, **run_args):
 #    think I can ignore it.
 # * what happens when a user needs to be banned?
 #  * the Townie should be deleted via post_delete signal
-# * what are things about a user that might change in django and require changes on disk?
-#  * username
-#  * displayname (only if i start using this?)
-#  * ssh key

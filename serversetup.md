@@ -14,11 +14,14 @@
 
 * create ttadmin user
 * ttadmin db user (or just rely on ident..?) / database created
-* copy `create_keyfile.py` from `scripts/` and put it in `/opt/bin/`. 
-* `chmod o+x /opt/bin/create_keyfile.py``
+* copy `create_keyfile.py` from `scripts/` and put it in `/opt/bin/`.
+* copy `rename_user.py` from `scripts/` and put it in `/tilde/bin/`.
+* `chmod u+x /opt/bin/create_keyfile.py``
 * add to sudoers: 
 
-    ttadmin ALL=(ALL)NOPASSWD:/usr/sbin/adduser,/bin/mkdir,/opt/bin/create_keyfile.py
+  ```
+  ttadmin ALL=(ALL)NOPASSWD:/usr/sbin/adduser,/bin/mkdir,/opt/bin/create_keyfile.py,/tilde/bin/rename_user.py
+  ```
 
 * have virtualenv with python 3.5+ ready, install tildetown-admin package into it
 * run django app as wsgi container through gunicorn as the ttadmin user with venv active
