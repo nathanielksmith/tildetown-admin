@@ -17,6 +17,7 @@ _Being an adminstrative tool written in Django for <https://tilde.town>_.
 
  * Python 3.5+
  * PostgreSQL 9+
+ * Ubuntu or Debian
  
 ## Installation / setup
 
