@@ -192,16 +192,15 @@ def on_pubkey_post_save(sender, instance, **kwargs):
 
 @receiver(pre_save, sender=Townie)
 def on_townie_pre_save(sender, instance, **kwargs):
-    existing = Townie.objects.filter(username=instance.username)
-    if not existing:
-        # we're making a new Townie; this means someone just signed up. We
-        # don't care at all about their state on disk.
+    if instance.id is None:
+        logging.info('Signup from {}'.format(instance.username))
         return
 
-    existing = existing[0]
+    existing = Townie.objects.get(id=instance.id)
 
     # See if we need to create this user on disk.
     if not existing.reviewed and instance.reviewed is True:
+        logging.info('Creating user {} on disk.'.format(instance.username))
         instance.create_on_disk()
         instance.send_welcome_email()
         instance.write_authorized_keys()
