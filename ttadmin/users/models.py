@@ -205,9 +205,13 @@ def on_townie_pre_save(sender, instance, **kwargs):
         instance.create_on_disk()
         instance.send_welcome_email()
         instance.write_authorized_keys()
+        return
 
     # See if this user needs a rename on disk
+    logging.info('checking for rename {} vs {}'.format(
+        existing.username, instance.username))
     if existing.username != instance.username:
+        logging.info('username do not match, going to rename')
         instance.rename_on_disk(existing.username)
 
 
