@@ -9,6 +9,8 @@ import subprocess
 def rename_user(old_username, new_username):
     """Given an old and a new username, renames user on disk with usermod.
     Raises if the usermod call fails."""
+
+    # Rename user
     args = [
         'usermod',
         '-l',
@@ -16,6 +18,15 @@ def rename_user(old_username, new_username):
         '-m',
         '-d',
         os.path.join('/home', new_username),
+        old_username
+    ]
+    subprocess.run(args, check=True)
+
+    # Rename their group
+    args = [
+        'groupmod',
+        '-n',
+        new_username,
         old_username
     ]
     subprocess.run(args, check=True)
