@@ -95,7 +95,7 @@ class Townie(User):
                               '--disabled-password',
                               self.username])
         if error:
-            logging.error(error)
+            logger.error(error)
             return
 
         error = _guarded_run(['sudo',
@@ -105,7 +105,7 @@ class Townie(User):
                               self.username])
 
         if error:
-            logging.error(error)
+            logger.error(error)
             return
 
         # Create .ssh
@@ -114,7 +114,7 @@ class Townie(User):
                               'mkdir',
                               dot_ssh_path])
         if error:
-            logging.error(error)
+            logger.error(error)
             return
 
     def write_authorized_keys(self):
@@ -138,7 +138,7 @@ class Townie(User):
                                   self.username],
                                  stdin=fp)
             if error:
-                logging.error(error)
+                logger.error(error)
 
     def generate_authorized_keys(self):
         """returns a string suitable for writing out to an authorized_keys
@@ -161,9 +161,9 @@ class Townie(User):
             old_username,
             self.username])
         if error:
-            logging.error(error)
+            logger.error(error)
             return
-        logging.info('Renamed {} to {}'.format(old_username, self.username))
+        logger.info('Renamed {} to {}'.format(old_username, self.username))
 
 
 class Pubkey(Model):
@@ -193,24 +193,24 @@ def on_pubkey_post_save(sender, instance, **kwargs):
 @receiver(pre_save, sender=Townie)
 def on_townie_pre_save(sender, instance, **kwargs):
     if instance.id is None:
-        logging.info('Signup from {}'.format(instance.username))
+        logger.info('Signup from {}'.format(instance.username))
         return
 
     existing = Townie.objects.get(id=instance.id)
 
     # See if we need to create this user on disk.
     if not existing.reviewed and instance.reviewed is True:
-        logging.info('Creating user {} on disk.'.format(instance.username))
+        logger.info('Creating user {} on disk.'.format(instance.username))
         instance.create_on_disk()
         instance.send_welcome_email()
         instance.write_authorized_keys()
         return
 
     # See if this user needs a rename on disk
-    logging.info('checking for rename {} vs {}'.format(
+    logger.info('checking for rename {} vs {}'.format(
         existing.username, instance.username))
     if existing.username != instance.username:
-        logging.info('username do not match, going to rename')
+        logger.info('username do not match, going to rename')
         instance.rename_on_disk(existing.username)
 
 
