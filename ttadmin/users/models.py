@@ -145,7 +145,9 @@ class Townie(User):
         file"""
         content = KEYFILE_HEADER
         for pubkey in self.pubkey_set.all():
-            if pubkey.key.startswith('ssh-'):
+            prefix = pubkey.key.split(' ')
+            prefix = prefix[0] if len(prefix) > 0 else None
+            if prefix in [p[0] for p in SSH_TYPE_CHOICES]:
                 content += '\n{}'.format(pubkey.key)
             else:
                 content += '\n{} {}'.format(pubkey.key_type, pubkey.key)
