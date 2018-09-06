@@ -6,6 +6,7 @@ from django.conf import settings
 
 logger = logging.getLogger()
 
+ADMIN_NAME='vilmibm'
 EXTERNAL_FROM='tildetown@protonmail.ch'
 
 def send_email(to, body, subject='a message from tilde.town'):
