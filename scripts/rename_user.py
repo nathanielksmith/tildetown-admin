@@ -10,6 +10,12 @@ def rename_user(old_username, new_username):
     """Given an old and a new username, renames user on disk with usermod.
     Raises if the usermod call fails."""
 
+    args = [
+        'pkill',
+        '-u',
+        old_username]
+    subprocess.run(args, check=True)
+
     # Rename user
     args = [
         'usermod',

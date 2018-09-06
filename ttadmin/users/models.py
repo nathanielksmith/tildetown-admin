@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 from django.db.models import TextField, BooleanField, CharField, ForeignKey
 from django.template.loader import get_template
 
-from common.mailing import send_email
+from common.mailing import send_email, ADMIN_NAME
 from help.models import Ticket
 
 logger = logging.getLogger()
@@ -51,16 +51,14 @@ class Townie(User):
     def home(self):
         return os.path.join('/home', self.username)
 
-    def send_welcome_email(self, admin_name='vilmibm'):
+    def send_welcome_email(self):
         welcome_tmpl = get_template('users/welcome_email.txt')
         context = {
             'username': self.username,
-            'admin_name': admin_name,
+            'admin_name': ADMIN_NAME,
         }
         text = welcome_tmpl.render(context)
-        from_address = '{}@tilde.town'.format(admin_name)
-        success = send_email(self.email, text, subject='tilde.town!',
-                             frum=from_address)
+        success = send_email(self.email, text, subject='tilde.town!')
         if not success:
             Ticket.objects.create(name='system',
                                   email='root@tilde.town',
@@ -166,6 +164,23 @@ class Townie(User):
             logger.error(error)
             return
         logger.info('Renamed {} to {}'.format(old_username, self.username))
+
+        # send user an email
+
+        rename_tmpl = get_template('users/rename_email.txt')
+        context = {
+            'old_username': old_username,
+            'new_username': self.username
+        }
+        text = rename_tmpl.render(context)
+        success = send_email(self.email, text, subject='Your tilde.town user has been renamed!')
+        if not success:
+            Ticket.objects.create(name='system',
+                                  email='root@tilde.town',
+                                  issue_type='other',
+                                  issue_text='was not able to send rename email to {} ({})'.format(
+                                      self.username,
+                                      self.email))
 
 
 class Pubkey(Model):

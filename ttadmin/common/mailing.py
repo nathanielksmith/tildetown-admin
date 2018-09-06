@@ -6,15 +6,15 @@ from django.conf import settings
 
 logger = logging.getLogger()
 
-FROM='root@tilde.town'
+EXTERNAL_FROM='tildetown@protonmail.ch'
 
-def send_email(to, body, subject='a message from tilde.town', frum=FROM,):
+def send_email(to, body, subject='a message from tilde.town'):
     """Sends an email using mailgun. Logs on failure."""
     response =  requests.post(
         settings.MAILGUN_URL,
         auth=('api', settings.MAILGUN_KEY),
         data={
-            'from': frum,
+            'from': EXTERNAL_FROM,
             'to': to,
             'subject': subject,
             'text': body

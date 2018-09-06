@@ -1,0 +1,13 @@
+hi!
+
+you requested a new username on tilde.town. This process required logging you
+out and killing any active processes you had running. sorry if this caused any
+confusion or inconvenience.
+
+old username: {{old_username}}
+new username: {{new_username}}
+
+you'll use this when ssh'ing into the town.
+
+best,
+~vilmibm
