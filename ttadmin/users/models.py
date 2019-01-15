@@ -132,7 +132,7 @@ class Townie(User):
             fp.seek(0)
             error = _guarded_run(['sudo',
                                   '--user={}'.format(self.username),
-                                  '/opt/bin/create_keyfile.py',
+                                  '/town/src/tildetown-admin/scripts/create_keyfile.py',
                                   self.username],
                                  stdin=fp)
             if error:
@@ -155,9 +155,10 @@ class Townie(User):
     def rename_on_disk(self, old_username):
         """Assuming that this instance has a new name set, renames this user on
         disk with self.username."""
+        # TODO use systemd thing to end their session
         error = _guarded_run([
             'sudo',
-            '/tilde/bin/rename_user.py',
+            '/town/src/tildetown-admin/scripts/rename_user.py',
             old_username,
             self.username])
         if error:
