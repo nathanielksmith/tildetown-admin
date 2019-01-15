@@ -5,3 +5,4 @@ __pycache__
 *.egg-info
 .bash_history
 .viminfo
+ttadmin/settings_live.py
