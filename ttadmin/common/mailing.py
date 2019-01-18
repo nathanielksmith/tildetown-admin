@@ -7,7 +7,8 @@ from django.conf import settings
 logger = logging.getLogger()
 
 ADMIN_NAME='vilmibm'
-EXTERNAL_FROM='tildetown@protonmail.ch'
+EXTERNAL_FROM='root@tilde.town'
+REPLY_TO='tildetown@protonmail.ch'
 
 def send_email(to, body, subject='a message from tilde.town'):
     """Sends an email using mailgun. Logs on failure."""
@@ -16,6 +17,7 @@ def send_email(to, body, subject='a message from tilde.town'):
         auth=('api', settings.MAILGUN_KEY),
         data={
             'from': EXTERNAL_FROM,
+            'h:Reply-To': REPLY_TO,
             'to': to,
             'subject': subject,
             'text': body
