@@ -71,14 +71,14 @@ class TownieForm(Form):
         widget=Textarea,
         validators=(validate_pubkey,),
         label='SSH public key',
-        help_text='if this is not a thing you are familiar with, that\'s okay! you can make one <a href="/users/keymachine">here</a> or read <a href="https://tilde.town/~wiki/ssh.html">our guide</a> to learn more.')
+        help_text='if this is not a thing you are familiar with, that\'s okay! you can make one <a href="/users/keymachine">here</a> or read <a href="https://tilde.town/wiki/getting-started/ssh.html">our guide</a> to learn more.')
     pubkey_type = ChoiceField(
         choices=SSH_TYPE_CHOICES,
         label='SSH public key type',
         help_text="unless you know what you're doing you can leave this be.")
     aup = BooleanField(
         label='i super agree to our acceptable use policy',
-        help_text='please read our <a href="https://tilde.town/~wiki/conduct.html">code of conduct</a> and click this box if you agree.')
+        help_text='please read our <a href="https://tilde.town/wiki/conduct.html">code of conduct</a> and click this box if you agree.')
 
     def clean(self):
         result = super().clean()
