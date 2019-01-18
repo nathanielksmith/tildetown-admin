@@ -1,6 +1,6 @@
 Welcome to tilde.town, ~{{username}}!
 
-Please take a moment to review our code of conduct: https://tilde.town/~wiki/conduct.html
+Please take a moment to review our code of conduct: https://tilde.town/wiki/conduct.html
 
 and login with:
 
