@@ -6,3 +6,4 @@ __pycache__
 .bash_history
 .viminfo
 ttadmin/settings_live.py
+ttadmin/static
