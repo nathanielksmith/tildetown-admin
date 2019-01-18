@@ -14,7 +14,7 @@ def rename_user(old_username, new_username):
         'pkill',
         '-u',
         old_username]
-    subprocess.run(args, check=True)
+    subprocess.run(args, check=False)
 
     # Rename user
     args = [
