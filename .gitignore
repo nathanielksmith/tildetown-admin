@@ -7,3 +7,7 @@ __pycache__
 .viminfo
 ttadmin/settings_live.py
 ttadmin/static
+venv/
+build/
+dist/
+

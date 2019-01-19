@@ -1,4 +1,4 @@
-from django.db.models import Model, TextField, EmailField, CharField
+from django.db.models import Model, TextField, EmailField, CharField, DateTimeField
 
 ISSUE_TYPE_CHOICES = (
     ('logging_in', 'help logging in'),
@@ -18,6 +18,7 @@ ISSUE_STATUS_CHOICES = (
 
 
 class Ticket(Model):
+    submitted = DateTimeField(auto_now_add=True)
     name = CharField(blank=False, null=False, max_length=100)
     email = EmailField(blank=False, null=False)
     issue_type = CharField(choices=ISSUE_TYPE_CHOICES,
